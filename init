@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+COMPOSE_PROJECT_NAME="dasher"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+main() {
+    FULL="${@}"
+    CMD=${1:-""}
+
+    cat > "${DIR}/.env" << EOF
+COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+EOF
+
+    if [[ -z "${CMD}" ]]; then
+        cat << EOF
+
+Wrapper around docker-compose. Runs pre-init configurations.
+Does not take root-level flags, only command-level flags.
+
+Usage:
+  ./init [COMMAND] [ARGS...]
+
+Commands:
+  build              Build or rebuild services
+  bundle             Generate a Docker bundle from the Compose file
+  config             Validate and view the Compose file
+  create             Create services
+  down               Stop and remove containers, networks, images, and volumes
+  events             Receive real time events from containers
+  exec               Execute a command in a running container
+  help               Get help on a command
+  images             List images
+  kill               Kill containers
+  logs               View output from containers
+  pause              Pause services
+  port               Print the public port for a port binding
+  ps                 List containers
+  pull               Pull service images
+  push               Push service images
+  restart            Restart services
+  rm                 Remove stopped containers
+  run                Run a one-off command
+  scale              Set number of containers for a service
+  start              Start services
+  stop               Stop services
+  top                Display the running processes
+  unpause            Unpause services
+  up                 Create and start containers
+  version            Show the Docker-Compose version information
+EOF
+
+        exit 0
+    fi
+
+    if [[ "${CMD}" != "down" ]]; then
+        traefik
+    fi
+
+    if [[ "${CMD}" == "build" ]]; then
+        docker-compose ${FULL}
+
+        whale
+        build
+
+        exit 0
+    fi
+
+    if [[ "${CMD}" == "up" ]]; then
+        whale
+        up
+
+        docker-compose ${FULL}
+
+        exit 0
+    fi
+
+    docker-compose ${FULL}
+}
+
+traefik() {
+    TRAEFIK=$(docker container ls --filter name=traefik_proxy | grep -c traefik_proxy || true)
+    if [[ ${TRAEFIK} -eq 0 ]]; then
+        NETWORK=$(docker network ls --filter name=traefik_webgateway | grep -c traefik_webgateway || true)
+        if [[ ${NETWORK} -eq 0 ]]; then
+            docker network create --driver bridge traefik_webgateway
+        fi
+
+        docker container run -d \
+            --name traefik_proxy \
+            --network traefik_webgateway \
+            --publish 80:80 \
+            --publish 8080:8080 \
+            --restart always \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume /dev/null:/traefik.toml \
+            traefik --api --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    fi
+}
+
+build() {
+    cat << EOF
+
+Images built. To run the containers use './init up -d'.
+
+Run Node:    docker-compose run --rm web node -v
+EOF
+
+    docker-compose run --rm -u root \
+        web sh -c "chown -R node:node /home/node/.cache"
+}
+
+up() {
+    cat << EOF
+Website:     http://${COMPOSE_PROJECT_NAME}.localhost/
+
+Run Node:    ./sie/bin/node node -v
+EOF
+}
+
+whale() {
+    cat << EOF
+
+                              ##         .
+                        ## ## ##        ==
+                     ## ## ## ## ##    ===
+                 /"""""""""""""""""\___/ ===
+            ~~~ {~~ ~~~~ ~~~ ~~~~ ~~~ ~ /  ===- ~~~
+                 \______ o           __/
+                   \    \         __/
+                    \____\_______/
+
+ █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗██╗
+██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝██║
+███████║██║     ██║         ██║  ██║██║   ██║██╔██╗ ██║█████╗  ██║
+██╔══██║██║     ██║         ██║  ██║██║   ██║██║╚██╗██║██╔══╝  ╚═╝
+██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗██╗
+╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝
+
+EOF
+}
+
+main "${@}"; exit
