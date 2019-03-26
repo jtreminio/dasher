@@ -21,7 +21,10 @@ body {
 }
 
 ::-webkit-scrollbar {
-    background-color: $dark-gray2;
+    background-color: $dark-gray1;
+}
+::-webkit-scrollbar-button {
+    background-color: $dark-gray4;
 }
 ::-webkit-scrollbar-corner {
     background-color: $dark-gray3;
@@ -36,7 +39,7 @@ code {
 }
 
 #root {
-    @extend .d-flex, .flex-column;
+    @extend .d-flex;
     min-height: 100vh;
 }
 
@@ -48,9 +51,52 @@ code {
     z-index: 9999;
 }
 
+#sidebar {
+    @extend .d-flex, .flex-column;
+    @extend .w-25;
+    box-shadow: 0 0 0 rgba($black, 0),
+                1px 0 1px rgba($black, $pt-dark-drop-shadow-opacity);
+
+    background-color: $dark-gray2;
+    min-width: 250px;
+    max-width: 250px;
+
+    .#{$ns}-navbar {
+        background-color: transparent;
+        box-shadow: none;
+        position: sticky;
+    }
+
+    .sidebar-header {
+        .#{$ns}-navbar-heading {
+            @extend .mr-0;
+            height: 100%;
+            width: 100%;
+
+            a {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+
+    .sidebar-body {
+        top: $pt-navbar-height;
+
+        .#{$ns}-navbar-group {
+            @extend .d-flex, .flex-column;
+            align-items: normal;
+            width: 100%;
+        }
+    }
+}
+
 #top-nav {
+    background-color: $dark-gray2;
+    box-shadow: 0 0 0 rgba($black, 0),
+                1px 1px 1px 0 rgba($black, $pt-dark-drop-shadow-opacity);
     position: sticky;
-    z-index: 10;
+    z-index: 20;
 
     .#{$ns}-navbar-heading {
         @extend .mr-0;
@@ -64,20 +110,20 @@ code {
 }
 
 #bottom-bar {
-    box-shadow: border-shadow($pt-dark-border-shadow-opacity),
-                0 0 0 rgba($black, 0),
-                0 -1px 1px rgba($black, $pt-dark-drop-shadow-opacity);
+    background-color: $dark-gray2;
+    box-shadow: 0 0 0 rgba($black, 0),
+                1px -1px 1px 0 rgba($black, $pt-dark-drop-shadow-opacity);
+    margin-top: auto;
+    z-index: 20;
 }
 
 // Contains sidebar and main container
 main {
-    @extend .container;
-    @extend .mt-3, .mb-auto;
+    @extend .d-flex, .flex-column;
+    @extend .my-3, .px-4;
 }
 
 #page {
-    @extend .row;
-
     // Page title/header
     .page-header {
         align-items: center;
@@ -85,7 +131,6 @@ main {
         flex-wrap: wrap;
         margin-bottom: 1.5rem;
         width: 100%;
-        z-index: 9;
 
         .page-subtitle {
             @extend .#{$ns}-text-muted;
@@ -190,7 +235,7 @@ form.service-form {
 // For MultiSelectInput
 .table-scroll {
     max-height: 290px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     th {
         position: sticky;
