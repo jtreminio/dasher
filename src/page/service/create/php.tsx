@@ -3,7 +3,6 @@ import {
     Button,
     Classes,
     Code,
-    Divider,
     H1,
     Intent,
 } from "@blueprintjs/core";
@@ -34,7 +33,7 @@ import CreateSubmit from "@app/component/service/createSubmit";
 import Form         from "@app/form/service/phpForm";
 import StoreContext from "@app/store";
 
-type Props = RouteComponentProps<{ projectId: string, version?: string }> & {}
+type Props = RouteComponentProps<{ version?: string }> & {}
 
 const Create = observer((props: Props) => {
     const store = React.useContext(StoreContext);
@@ -50,7 +49,7 @@ const Create = observer((props: Props) => {
             name: sName,
             type: sType,
             version: sVersion,
-            appRoot: "/path/to/app/root",
+            appRoot: "./",
             php: ini.php.selected,
             fpm: ini.fpm.selected,
             xdebug: ini.xdebug.selected,
@@ -65,7 +64,7 @@ const Create = observer((props: Props) => {
             return;
         }
 
-        store.routing.push(`/project/${props.match.params.projectId}/service`);
+        store.routing.push(`/service`);
     };
 
     return (
@@ -80,43 +79,30 @@ const Create = observer((props: Props) => {
                 </div>
 
                 <AppDetails form={form}>
-                    <div className={`${Classes.TEXT_MUTED} ml-3`}>
-                        <p>
-                            Composer comes pre-installed and is available
-                            as <Code className="text-nowrap">$ composer</Code>.
-                        </p>
-                    </div>
+                    <p className={Classes.TEXT_MUTED}>
+                        Composer comes pre-installed and is available
+                        as <Code className="text-nowrap">$ composer</Code>.
+                    </p>
                 </AppDetails>
-
-                <Divider />
 
                 <IniPhp form={form} />
 
-                <Divider />
-
                 <IniFpm form={form} />
-
-                <Divider />
 
                 <IniXdebug form={form} />
 
-                <Divider />
-
                 <ModulePhp form={form} allModules={phpModules} />
 
-                <Divider />
-
-                <div className="row">
-                    <div className="col text-right">
-                        <Button
-                            type="submit"
-                            rightIcon={IconNames.PLUS}
-                            intent={Intent.SUCCESS}
-                        >
-                            Create Service
-                        </Button>
-                    </div>
-                </div>
+                <p className="text-right">
+                    <Button
+                        large
+                        type="submit"
+                        rightIcon={IconNames.PLUS}
+                        intent={Intent.SUCCESS}
+                    >
+                        Create Service
+                    </Button>
+                </p>
             </form>
         </div>
     );

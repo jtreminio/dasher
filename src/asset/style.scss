@@ -21,16 +21,10 @@ body {
 }
 
 ::-webkit-scrollbar {
-    background-color: $dark-gray1;
-}
-::-webkit-scrollbar-button {
-    background-color: $dark-gray4;
-}
-::-webkit-scrollbar-corner {
-    background-color: $dark-gray3;
+    background-color: $gray4;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: $dark-gray4;
+    background-color: $gray1;
 }
 
 code {
@@ -204,6 +198,10 @@ form.service-form {
 
     .#{$ns}-divider {
         @extend .my-4;
+    }
+
+    section {
+        @extend .mb-5;
     }
 
     .helper-form {

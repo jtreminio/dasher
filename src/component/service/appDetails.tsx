@@ -1,9 +1,11 @@
 import * as React from "react";
 import {
+    Card,
     Code,
     ControlGroup,
+    Elevation,
     FormGroup,
-    H3,
+    H2,
     InputGroup,
     Intent,
 } from "@blueprintjs/core";
@@ -30,19 +32,19 @@ const AppDetails = observer<Props>(props => {
         props.form.appRoot.onChange(e.currentTarget.value);
 
     return (
-        <div className="d-flex flex-column">
-            <div>
-                <H3>Service Details</H3>
+        <section>
+            <H2>Service Details</H2>
 
-                {props.children}
-            </div>
+            {props.children}
 
-            <div className="d-flex px-2">
-                <Name form={props.form} onChange={onChangeName} />
+            <Card elevation={Elevation.TWO}>
+                <div className="row">
+                    <Name form={props.form} onChange={onChangeName} />
 
-                <AppRoot form={props.form} onChange={onChangeAppRoot} />
-            </div>
-        </div>
+                    <AppRoot form={props.form} onChange={onChangeAppRoot} />
+                </div>
+            </Card>
+        </section>
     );
 });
 
@@ -56,11 +58,10 @@ const Name = observer<FieldProps>(props => {
 
     return (
         <FormGroup
-            className="flex-fill w-50 px-2"
+            className="col-6"
             intent={error ? Intent.DANGER : undefined}
             label="Service Name"
             labelFor="name"
-            labelInfo="*"
         >
             <ControlGroup fill>
                 <InputGroup
@@ -74,9 +75,9 @@ const Name = observer<FieldProps>(props => {
                 <ErrorIcon hasError={!!error} />
             </ControlGroup>
 
-            <div className="helper-text">{error}</div>
+            <div className="helper-text">{error && `> ${error}`}</div>
 
-            <p className="mt-2">
+            <p className="helper-text">
                 Must be unique to each Project. You can leave it as default.
             </p>
         </FormGroup>
@@ -85,10 +86,9 @@ const Name = observer<FieldProps>(props => {
 
 const AppRoot = observer<FieldProps>(props =>
     <FormGroup
-        className="flex-fill w-50 px-2"
+        className="col-6"
         label="Path to App Root"
         labelFor="appRoot"
-        labelInfo="*"
         intent={props.form.appRoot.error ? Intent.DANGER : undefined}
     >
         <ControlGroup fill>
@@ -103,9 +103,11 @@ const AppRoot = observer<FieldProps>(props =>
             <ErrorIcon hasError={!!props.form.appRoot.error} />
         </ControlGroup>
 
-        <div className="helper-text">{props.form.appRoot.error}</div>
+        <div className="helper-text">
+            {props.form.appRoot.error && `> ${props.form.appRoot.error}`}
+        </div>
 
-        <p className="mt-2">
+        <p className="helper-text">
             Location of your project files on host machine.
             The contents will be made available inside the container
             at <Code>/var/www</Code>.
