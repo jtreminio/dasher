@@ -28,23 +28,32 @@ import {
     modules,
     ModuleI,
 } from "@app/data/php";
-import AppDetails   from "@app/component/service/appDetails";
-import CreateSubmit from "@app/component/service/createSubmit";
-import Form         from "@app/form/service/phpForm";
-import StoreContext from "@app/store";
+import AppDetails    from "@app/component/service/appDetails";
+import CreateSubmit  from "@app/component/service/createSubmit";
+import NginxAppVhost from "@app/component/service/nginxAppVhost";
+import vhosts        from "@app/data/nginx";
+import Form          from "@app/form/service/phpWebForm";
+import StoreContext  from "@app/store";
 
 type Props = RouteComponentProps<{ version?: string }> & {}
 
+const link1 = "https://jtreminio.com/blog/all-in-one-php-fpm-nginx-apache-containers/";
+
 const Create = observer<Props>(props => {
     const store = React.useContext(StoreContext);
-    const serviceTypeSlug = "php";
+    const serviceTypeSlug = "php-nginx";
 
     const sType = store.service.getServiceTypeBySlug(serviceTypeSlug);
-    const sName = store.service.generateName(sType, serviceTypeSlug);
+    const sName = store.service.generateName(sType, "web");
     const sVersion = store.service.matchVersion(sType, props.match.params.version);
     const phpModules: ModuleI = modules[`v${sVersion}`];
+    const allVhosts = vhosts.filter(vhost => {
+        return vhost.engine === "php" || vhost.engine === "none";
+    });
 
     const [form] = React.useState(() => {
+        const vhost = vhosts.find(v => v.type === "fpm");
+
         return new Form().fromObj({
             name: sName,
             type: sType,
@@ -54,6 +63,9 @@ const Create = observer<Props>(props => {
             fpm: ini.fpm.selected,
             xdebug: ini.xdebug.selected,
             modules: phpModules.selected,
+            vhost: "awesome.localhost",
+            vhostType: vhost!.type,
+            vhostData: vhost!.data,
         })
     });
 
@@ -84,6 +96,20 @@ const Create = observer<Props>(props => {
                         as <Code className="text-nowrap">$ composer</Code>.
                     </p>
                 </AppDetails>
+
+                <NginxAppVhost form={form} allVhosts={allVhosts}>
+                    <p className={Classes.TEXT_MUTED}>
+                        The container comes with Nginx configs for several common PHP applications.
+                        You can select one from the dropdown, or create your own custom config.
+                    </p>
+
+                    <p className={Classes.TEXT_MUTED}>
+                        For more information about <Code>$cookie_XDEBUG_SESSION</Code> and&nbsp;
+                        <Code>$my_fastcgi_pass</Code> you can read my blog post,&nbsp;
+                        <a href={link1} target="_blank">All-in-One PHP-FPM +
+                            Nginx/Apache Containers</a>.
+                    </p>
+                </NginxAppVhost>
 
                 <IniPhp form={form} />
 
