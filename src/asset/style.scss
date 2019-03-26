@@ -38,6 +38,15 @@ code {
     color: #d77287 !important;
 }
 
+// Widths as percent
+@each $num in 10, 20, 30, 40, 50, 60, 70, 80, 90 {
+    $percent: percentage($num / 100);
+
+    .w-#{$num} {
+        width: $percent !important;
+    }
+}
+
 #root {
     @extend .d-flex;
     min-height: 100vh;
@@ -247,6 +256,10 @@ form.service-form {
 
     tbody td {
         box-shadow: none !important;
+
+        label {
+            margin-bottom: 0;
+        }
     }
 }
 
