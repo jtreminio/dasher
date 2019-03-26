@@ -1,4 +1,3 @@
-import "codemirror/mode/nginx/nginx";
 import * as React from "react";
 import {
     Card,
@@ -18,6 +17,7 @@ import {
     ServiceAppVhostFormI,
     VhostConfig,
 } from "@app/types";
+import ApacheMode     from "@app/data/apache-codemirror.js";
 import ErrorIcon      from "@app/component/formErrorIcon";
 import SelectEditable from "@app/component/selectEditable";
 
@@ -28,7 +28,7 @@ type Props = {
     allVhosts: VhostConfig[],
 };
 
-const NginxAppVhost = observer<Props>(props => {
+const ApacheAppVhost = observer<Props>(props => {
     const vhostOnChange = (e: React.SyntheticEvent<HTMLInputElement>) =>
         props.form.vhost.onChange(e.currentTarget.value);
 
@@ -45,7 +45,7 @@ const NginxAppVhost = observer<Props>(props => {
 
     return (
         <section>
-            <H2>Nginx Config</H2>
+            <H2>Apache Virtual Host Config</H2>
 
             {props.children}
 
@@ -57,9 +57,10 @@ const NginxAppVhost = observer<Props>(props => {
                         allRecords={props.allVhosts}
                         dataOnChange={dataOnChange}
                         editButtonTarget="custom"
+                        editorDefineMode={{name: "apache", fn: ApacheMode}}
                         editorProps={{
                             lineNumbers: true,
-                            mode: "nginx",
+                            mode: "apache",
                             theme: "material",
                         }}
                         formGroupProps={{
@@ -110,4 +111,4 @@ const Vhost = observer<FieldProps>(props =>
     </FormGroup>,
 );
 
-export default NginxAppVhost;
+export default ApacheAppVhost;
