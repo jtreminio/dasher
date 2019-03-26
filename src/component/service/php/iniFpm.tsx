@@ -18,24 +18,27 @@ type Props = {
 };
 
 const nameFormat = (name: string) => name.replace("FPM.", "");
+const link1 = "https://github.com/jtreminio/php-docker/blob/master/Dockerfile-env#L663-L675";
 
 const IniFpm = observer<Props>(props =>
-    <div className="helper-form">
-        <div className="left">
+    <div className="d-flex flex-column">
+        <div>
             <H3>FPM Conf</H3>
 
-            <div className={Classes.TEXT_MUTED}>
-                <p><a href="https://github.com/jtreminio/php-docker/blob/master/Dockerfile-env#L663-L675"
-                      target="_blank">Click here for all default values.</a></p>
+            <div className={`${Classes.TEXT_MUTED} ml-3`}>
+                <p>
+                    <a href={link1}
+                       target="_blank">Click here for all default values.</a>
+                </p>
             </div>
         </div>
 
-        <div className="right">
+        <div className="mt-3 px-2">
             <MultiSelectInput
                 data={ini.fpm.data}
                 nameFormat={nameFormat}
-                selected={props.form.fpm.value}
                 onSelect={props.form.fpm.onChange}
+                selected={props.form.fpm.value}
             />
         </div>
     </div>

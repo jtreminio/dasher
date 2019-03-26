@@ -17,12 +17,11 @@ import {
 import ErrorIcon from "@app/component/formErrorIcon";
 
 type Props = {
-    /** Used as left-side details */
     children?: React.ReactNode,
     form: ServiceAppFormI,
 };
 
-const AppDetails = observer((props: Props) => {
+const AppDetails = observer<Props>(props => {
     const onChangeName = (e: React.SyntheticEvent<HTMLInputElement>) => {
         props.form.name.onChange(e.currentTarget.value.replace(/\W/g, ""));
     };
@@ -31,14 +30,14 @@ const AppDetails = observer((props: Props) => {
         props.form.appRoot.onChange(e.currentTarget.value);
 
     return (
-        <div className="helper-form">
-            <div className="left">
+        <div className="d-flex flex-column">
+            <div>
                 <H3>Service Details</H3>
 
                 {props.children}
             </div>
 
-            <div className="right">
+            <div className="d-flex px-2">
                 <Name form={props.form} onChange={onChangeName} />
 
                 <AppRoot form={props.form} onChange={onChangeAppRoot} />
@@ -52,24 +51,24 @@ type FieldProps = {
     onChange: (e: React.SyntheticEvent<HTMLInputElement>) => void,
 }
 
-const Name = observer((props: FieldProps) => {
+const Name = observer<FieldProps>(props => {
     const error = props.form.name.error || props.form.nameInUse.error;
 
     return (
         <FormGroup
-            inline
+            className="flex-fill w-50 px-2"
+            intent={error ? Intent.DANGER : undefined}
             label="Service Name"
             labelFor="name"
             labelInfo="*"
-            intent={error ? Intent.DANGER : undefined}
         >
             <ControlGroup fill>
                 <InputGroup
                     id="name"
-                    placeholder="Service Name"
                     intent={error ? Intent.DANGER : undefined}
-                    value={props.form.name.value}
                     onChange={props.onChange}
+                    placeholder="Service Name"
+                    value={props.form.name.value}
                 />
 
                 <ErrorIcon hasError={!!error} />
@@ -84,14 +83,13 @@ const Name = observer((props: FieldProps) => {
     );
 });
 
-const AppRoot = observer((props: FieldProps) =>
+const AppRoot = observer<FieldProps>(props =>
     <FormGroup
-        inline
+        className="flex-fill w-50 px-2"
         label="Path to App Root"
         labelFor="appRoot"
         labelInfo="*"
         intent={props.form.appRoot.error ? Intent.DANGER : undefined}
-        className="mb-0"
     >
         <ControlGroup fill>
             <InputGroup
@@ -112,13 +110,7 @@ const AppRoot = observer((props: FieldProps) =>
             The contents will be made available inside the container
             at <Code>/var/www</Code>.
         </p>
-
-        <p className="mt-2">
-            Windows users: You must use forward-slash&nbsp;
-            <Code>c:/dev/my-project</Code> or
-            double back-slash <Code>c:\\dev\\my-project</Code>.
-        </p>
-    </FormGroup>,
+    </FormGroup>
 );
 
 export default AppDetails;

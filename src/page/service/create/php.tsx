@@ -80,7 +80,7 @@ const Create = observer((props: Props) => {
                 </div>
 
                 <AppDetails form={form}>
-                    <div className={Classes.TEXT_MUTED}>
+                    <div className={`${Classes.TEXT_MUTED} ml-3`}>
                         <p>
                             Composer comes pre-installed and is available
                             as <Code className="text-nowrap">$ composer</Code>.
