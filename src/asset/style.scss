@@ -187,8 +187,17 @@ main {
 
         .button-group-container {
             @extend .d-flex, .flex-wrap, .justify-content-end;
-
             margin-top: auto;
+
+            .version-single {
+                justify-content: flex-end;
+                min-width: 126px;
+            }
+
+            .version-multi {
+                justify-content: flex-end;
+                min-width: 90px;
+            }
         }
     }
 }

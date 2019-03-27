@@ -85,10 +85,9 @@ const ListServiceTypes = (props: {servicesTypes: ServiceType[]}) =>
                     <div className="button-group-container">
                         <ButtonGroup>
                             <AnchorButton
-                                className="mr-2"
                                 href={serviceType.url}
-                                target="_blank"
                                 icon={IconNames.LINK}
+                                target="_blank"
                             >
                                 info
                             </AnchorButton>
@@ -105,6 +104,11 @@ const ListServiceTypes = (props: {servicesTypes: ServiceType[]}) =>
 const VersionButton = (props: {serviceType: ServiceType}) =>
     <>
         <RouterButton
+            className={props.serviceType.versions.length === 1
+                ? "version-single"
+                : "version-multi"
+            }
+            icon={IconNames.TAG}
             intent={Intent.PRIMARY}
             intentForce
             path={`/service/create/${props.serviceType.slug}`}
@@ -114,7 +118,6 @@ const VersionButton = (props: {serviceType: ServiceType}) =>
                     : undefined
             }
         >
-            {props.serviceType.versions[0] !== "latest" ? "Vers. " : ""}
             {props.serviceType.versions[0]}
         </RouterButton>
 
@@ -123,8 +126,10 @@ const VersionButton = (props: {serviceType: ServiceType}) =>
                 content={<VersionDropdown serviceType={props.serviceType} />}
                 position={Position.BOTTOM_RIGHT}
             >
-                <Button rightIcon={IconNames.CARET_DOWN}
-                        intent={Intent.PRIMARY} />
+                <Button
+                    intent={Intent.PRIMARY}
+                    rightIcon={IconNames.CARET_DOWN}
+                />
             </Popover>
         }
     </>
@@ -142,4 +147,5 @@ const VersionDropdown = (props: {serviceType: ServiceType}) =>
         )}
     </Menu>
 ;
+
 export default Page;
