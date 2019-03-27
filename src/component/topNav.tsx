@@ -1,11 +1,20 @@
 import * as React from "react";
 import {
+    Alignment,
+    AnchorButton,
     Intent,
     Navbar,
 } from "@blueprintjs/core";
 import {
     IconNames,
 } from "@blueprintjs/icons";
+import {
+    FontAwesomeIcon,
+} from "@fortawesome/react-fontawesome";
+import {
+    faGithub,
+    faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 
 import RouterButton from "@app/component/routerButton";
 
@@ -44,6 +53,28 @@ const TopNav = () =>
             >
                 Services
             </RouterButton>
+        </Navbar.Group>
+
+        <Navbar.Group align={Alignment.RIGHT} className="d-none d-md-flex">
+            <Navbar.Divider />
+
+            <AnchorButton
+                href="#"
+                large
+                minimal
+                target="_blank"
+            >
+                <FontAwesomeIcon icon={faTwitter} size="lg" />
+            </AnchorButton>
+
+            <AnchorButton
+                href="#"
+                large
+                minimal
+                target="_blank"
+            >
+                <FontAwesomeIcon icon={faGithub} size="lg" />
+            </AnchorButton>
         </Navbar.Group>
     </Navbar>
 ;
