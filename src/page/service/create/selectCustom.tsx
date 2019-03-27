@@ -71,8 +71,8 @@ const Page = observer(() => {
     );
 });
 
-const ListServiceTypes = (props: {servicesTypes: ServiceType[]}) => {
-    return (<>
+const ListServiceTypes = (props: {servicesTypes: ServiceType[]}) =>
+    <>
         {props.servicesTypes.map(serviceType =>
             <div key={serviceType.image} className="service-box-container">
                 <Card elevation={Elevation.TWO}>
@@ -85,29 +85,26 @@ const ListServiceTypes = (props: {servicesTypes: ServiceType[]}) => {
                     <div className="button-group-container">
                         <ButtonGroup>
                             <AnchorButton
+                                className="mr-2"
                                 href={serviceType.url}
                                 target="_blank"
                                 icon={IconNames.LINK}
-                                minimal
                             >
                                 info
                             </AnchorButton>
-                        </ButtonGroup>
 
-                        <ButtonGroup>
                             <VersionButton serviceType={serviceType} />
                         </ButtonGroup>
                     </div>
                 </Card>
             </div>
         )}
-    </>);
-};
+    </>
+;
 
-const VersionButton = (props: {serviceType: ServiceType}) => {
-    return (<>
+const VersionButton = (props: {serviceType: ServiceType}) =>
+    <>
         <RouterButton
-            icon={IconNames.TAG}
             intent={Intent.PRIMARY}
             intentForce
             path={`/service/create/${props.serviceType.slug}`}
@@ -117,7 +114,8 @@ const VersionButton = (props: {serviceType: ServiceType}) => {
                     : undefined
             }
         >
-            Version {props.serviceType.versions[0]}
+            {props.serviceType.versions[0] !== "latest" ? "Vers. " : ""}
+            {props.serviceType.versions[0]}
         </RouterButton>
 
         {props.serviceType.versions.length > 1 &&
@@ -129,8 +127,8 @@ const VersionButton = (props: {serviceType: ServiceType}) => {
                         intent={Intent.PRIMARY} />
             </Popover>
         }
-    </>);
-};
+    </>
+;
 
 const VersionDropdown = (props: {serviceType: ServiceType}) =>
     <Menu>

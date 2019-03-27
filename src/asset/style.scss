@@ -159,6 +159,7 @@ main {
 .service-box-container {
     @extend .col-12, .col-md-6, .col-xl-4;
     @extend .mb-5;
+    max-width: 400px;
 
     .#{$ns}-card {
         height: 100%;
@@ -185,7 +186,7 @@ main {
         }
 
         .button-group-container {
-            @extend .d-flex, .flex-wrap, .justify-content-between;
+            @extend .d-flex, .flex-wrap, .justify-content-end;
 
             margin-top: auto;
         }

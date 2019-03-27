@@ -10,17 +10,11 @@ import {
 import {
     observer,
 } from "mobx-react-lite";
-import {
-    RouteComponentProps,
-    withRouter,
-} from "react-router-dom";
 
 import SelectBundle from "@app/page/service/create/selectBundle";
 import SelectCustom from "@app/page/service/create/selectCustom";
 
-type Props = RouteComponentProps<{ projectId: string }> & {}
-
-const Page = observer<Props>(props => {
+const Page = observer(() => {
     const [tab, setTab] = React.useState<React.ReactText>("custom");
 
     return (
@@ -56,4 +50,4 @@ const Page = observer<Props>(props => {
     );
 });
 
-export default withRouter(Page);
+export default Page;
