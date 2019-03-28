@@ -6,13 +6,21 @@ set -o pipefail
 COMPOSE_PROJECT_NAME="dasher"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+USER_ID=$(id -u ${USER})
+USER_GROUP_ID=$(id -g ${USER})
+DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 main() {
     FULL="${@}"
     CMD=${1:-""}
 
-    cat > "${DIR}/.env" << EOF
+    cat > "${DIR}/docker/.env" << EOF
 COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+USER_ID=${USER_ID}
+GROUP_ID=${USER_GROUP_ID}
+DOCKER_GROUP_ID=${DOCKER_GROUP_ID}
 EOF
 
     if [[ -z "${CMD}" ]]; then
@@ -56,12 +64,14 @@ EOF
         exit 0
     fi
 
+    PREFIX="--project-directory ${DIR}/docker -f ${DIR}/docker/docker-compose.yml"
+
     if [[ "${CMD}" != "down" ]]; then
         traefik
     fi
 
     if [[ "${CMD}" == "build" ]]; then
-        docker-compose ${FULL}
+        docker-compose ${PREFIX} ${FULL}
 
         whale
         build
@@ -70,15 +80,17 @@ EOF
     fi
 
     if [[ "${CMD}" == "up" ]]; then
+        bins "api" "www-data"
+        bins "web" "node"
         whale
         up
 
-        docker-compose ${FULL}
+        docker-compose ${PREFIX} ${FULL}
 
         exit 0
     fi
 
-    docker-compose ${FULL}
+    docker-compose ${PREFIX} ${FULL}
 }
 
 traefik() {
@@ -106,10 +118,12 @@ build() {
 
 Images built. To run the containers use './init up -d'.
 
-Run Node:    docker-compose run --rm web node -v
+Run Client:    ./init run --rm -u node web node -v
+Run Server:    ./init run --rm -u www-data api php -v
+
 EOF
 
-    docker-compose run --rm -u root \
+    docker-compose ${PREFIX} run --rm -u root \
         web sh -c "chown -R node:node /home/node/.cache"
 }
 
@@ -117,8 +131,40 @@ up() {
     cat << EOF
 Website:     http://${COMPOSE_PROJECT_NAME}.localhost/
 
-Run Node:    ./sie/bin/node node -v
+Run Client:    ./init exec -u node web node -v
+        OR:    ./bin/web node -v
+
+Run Server:    ./init exec -u www-data api php -v
+        OR:    ./bin/api php -v
+
 EOF
+}
+
+bins() {
+    IMG=${1:-""}
+    USER=${2:-""}
+
+    cat > "${DIR}/bin/${IMG}" <<'EOF'
+#!/usr/bin/env bash
+set -e
+set -o pipefail
+
+CMD="${@}"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+docker-compose \
+    --project-directory ${DIR}/../docker \
+    -f ${DIR}/../docker/docker-compose.yml \
+    exec \
+EOF
+cat >> "${DIR}/bin/${IMG}" <<EOF
+        -u ${USER} \\
+        ${IMG} \${CMD}
+
+exit 0
+EOF
+
+    chmod +x "${DIR}/bin/${IMG}"
 }
 
 whale() {

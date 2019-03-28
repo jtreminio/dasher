@@ -1,0 +1,63 @@
+version: '3.2'
+networks:
+  private:
+  public:
+    external:
+      name: traefik_webgateway
+volumes:
+  composer:
+  yarn:
+services:
+  dockerhost:
+    image: qoomon/docker-host
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    networks:
+      - private
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
+        DOCKER_GROUP_ID: ${DOCKER_GROUP_ID:-0}
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent
+      - PHP.display_errors=On
+      - PHP.error_reporting=-1
+      - PHP.xdebug.remote_host=dockerhost
+      - PHPFPM_XDEBUG=on
+      - VHOST=symfony4
+    labels:
+      - traefik.backend=${COMPOSE_PROJECT_NAME}-api
+      - traefik.docker.network=traefik_webgateway
+      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost;PathPrefix:/api
+      - traefik.port=8080
+    networks:
+      - public
+      - private
+    privileged: true
+    volumes:
+      - ${SSH_AUTH_SOCK}:/ssh-agent:ro
+      - composer:/.composer
+      - ${PWD}:/var/www
+      - /var/run/docker.sock:/var/run/docker.sock
+  web:
+    image: node:11-alpine
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent
+    labels:
+      - traefik.backend=${COMPOSE_PROJECT_NAME}-web
+      - traefik.docker.network=traefik_webgateway
+      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
+      - traefik.port=3000
+    networks:
+      - public
+      - private
+    user: node
+    volumes:
+      - ${SSH_AUTH_SOCK}:/ssh-agent:ro
+      - yarn:/home/node/.cache
+      - ${PWD}:/var/www
+    working_dir: /var/www/client
+    command: "yarn run start"
