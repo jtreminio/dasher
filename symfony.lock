@@ -1,4 +1,13 @@
 {
+    "clue/stream-filter": {
+        "version": "v1.4.0"
+    },
+    "docker-php/docker-php": {
+        "version": "v2.0.0"
+    },
+    "docker-php/docker-php-api": {
+        "version": "v4.1.36.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -35,11 +44,68 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "guzzlehttp/psr7": {
+        "version": "1.5.2"
+    },
+    "jane-php/json-schema-runtime": {
+        "version": "v4.2.0"
+    },
+    "jane-php/open-api-runtime": {
+        "version": "v4.2.0"
+    },
+    "league/uri": {
+        "version": "5.3.0"
+    },
+    "league/uri-components": {
+        "version": "1.8.2"
+    },
+    "league/uri-hostname-parser": {
+        "version": "1.1.1"
+    },
+    "league/uri-interfaces": {
+        "version": "1.1.1"
+    },
+    "league/uri-manipulations": {
+        "version": "1.5.0"
+    },
+    "league/uri-parser": {
+        "version": "1.4.1"
+    },
+    "league/uri-schemes": {
+        "version": "1.2.1"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
     },
     "nikic/php-parser": {
         "version": "v4.2.1"
+    },
+    "php-http/client-common": {
+        "version": "1.9.1"
+    },
+    "php-http/discovery": {
+        "version": "1.6.1"
+    },
+    "php-http/httplug": {
+        "version": "v1.1.0"
+    },
+    "php-http/message": {
+        "version": "1.7.2"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
+    },
+    "php-http/multipart-stream-builder": {
+        "version": "1.0.0"
+    },
+    "php-http/promise": {
+        "version": "v1.0.0"
+    },
+    "php-http/socket-client": {
+        "version": "v1.4.1"
+    },
+    "php-jsonpointer/php-jsonpointer": {
+        "version": "v3.0.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -56,11 +122,17 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.1.0"
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "2.0.5"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -182,6 +254,9 @@
             "config/packages/prod/monolog.yaml",
             "config/packages/test/monolog.yaml"
         ]
+    },
+    "symfony/options-resolver": {
+        "version": "v4.2.4"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
