@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./server",
+    "paths": {
+      "@app/*": [
+        "./*"
+      ]
+    },
+    "outDir": "build/server",
+    "rootDir": "server"
+  },
+  "include": [
+    "./server/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src",
+    "**/*.js"
+  ]
+}

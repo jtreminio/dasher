@@ -12,6 +12,21 @@ services:
     cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
     networks:
       - private
+  dockerproxy:
+    image: tecnativa/docker-socket-proxy
+    environment:
+        - CONTAINERS=1
+    labels:
+      - traefik.backend=${COMPOSE_PROJECT_NAME}-api
+      - traefik.docker.network=traefik_webgateway
+      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost;PathPrefixStrip:/api
+      - traefik.port=2375
+    networks:
+      - public
+      - private
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   web:
     build:
       context: .
@@ -29,11 +44,9 @@ services:
     networks:
       - public
       - private
-    privileged: true
     user: node
     volumes:
       - ${SSH_AUTH_SOCK}:/ssh-agent:ro
       - yarn:/home/node/.cache
-      - /var/run/docker.sock:/var/run/docker.sock
       - ${PWD}:/var/www
     working_dir: /var/www

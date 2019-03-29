@@ -9,7 +9,6 @@ import {
 import {
     Router,
 } from "react-router-dom";
-import * as Dockerode from 'dockerode';
 
 import * as serviceWorker from "@app/serviceWorker";
 import {
@@ -17,24 +16,6 @@ import {
 } from "@app/store";
 import App  from "@app/App";
 import init from "@app/store/init";
-
-const foo = async () => {
-    const dockerode = await new Dockerode();
-    const container = await dockerode.getContainer('dasher_web_1');
-    console.log(container);
-
-    container.logs({ stdout: true, stderr: true, follow: false }, (error, result) => {
-        if (error) {
-            console.error('container logs error', error);
-        }
-
-        console.log(result);
-    });
-};
-
-foo();
-
-
 
 init().then(() => {
     console.log("Loading React");

@@ -19,7 +19,18 @@ import RouterButton from "@app/component/routerButton";
 
 type Props = RouteComponentProps<{ projectId: string }> & {}
 
+import axios from "axios";
+
 const Page = observer<Props>(props => {
+    (async () => {
+        await axios('http://dasher.localhost/api/containers/json', {
+
+        })
+        .then(res => {
+            console.log(res.data);
+        });
+    })();
+
     return (
         <div id="page">
             <div className="page-header">
