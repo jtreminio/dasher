@@ -25,7 +25,7 @@ services:
       - traefik.backend=${COMPOSE_PROJECT_NAME}-web
       - traefik.docker.network=traefik_webgateway
       - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
-      - traefik.port=3000
+      - traefik.port=8080
     networks:
       - public
       - private
