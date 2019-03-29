@@ -1,0 +1,7 @@
+FROM node:11-alpine
+
+ARG DOCKER_GROUP_ID
+RUN getent group docker 2>&1 > /dev/null || addgroup -g ${DOCKER_GROUP_ID} docker &&\
+    addgroup node docker &&\
+    mkdir -p /home/node/.cache &&\
+    chown -R node:node /home/node

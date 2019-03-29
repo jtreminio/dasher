@@ -71,21 +71,13 @@ EOF
     fi
 
     if [[ "${CMD}" == "build" ]]; then
-        docker-compose ${PREFIX} ${FULL}
-
-        whale
         build
 
         exit 0
     fi
 
     if [[ "${CMD}" == "up" ]]; then
-        bins "api" "www-data"
-        bins "web" "node"
-        whale
         up
-
-        docker-compose ${PREFIX} ${FULL}
 
         exit 0
     fi
@@ -114,28 +106,31 @@ traefik() {
 }
 
 build() {
+    docker-compose ${PREFIX} ${FULL}
+
+    whale
+
     cat << EOF
 
 Images built. To run the containers use './init up -d'.
 
-Run Client:    ./init run --rm -u node web node -v
-Run Server:    ./init run --rm -u www-data api php -v
+Run Client:    ./init run --rm web node -v
 
 EOF
-
-    docker-compose ${PREFIX} run --rm -u root \
-        web sh -c "chown -R node:node /home/node/.cache"
 }
 
 up() {
+    bins "web" "node"
+
+    docker-compose ${PREFIX} ${FULL}
+
+    whale
+
     cat << EOF
 Website:     http://${COMPOSE_PROJECT_NAME}.localhost/
 
-Run Client:    ./init exec -u node web node -v
+Run Client:    ./init exec web node -v
         OR:    ./bin/web node -v
-
-Run Server:    ./init exec -u www-data api php -v
-        OR:    ./bin/api php -v
 
 EOF
 }
