@@ -8,7 +8,6 @@ COMPOSE_PROJECT_NAME="dasher"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 USER_ID=$(id -u ${USER})
 USER_GROUP_ID=$(id -g ${USER})
-DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -20,7 +19,6 @@ main() {
 COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
 USER_ID=${USER_ID}
 GROUP_ID=${USER_GROUP_ID}
-DOCKER_GROUP_ID=${DOCKER_GROUP_ID}
 EOF
 
     if [[ -z "${CMD}" ]]; then
